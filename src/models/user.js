@@ -7,12 +7,9 @@ const userSchema = new mongoose.Schema({
     displayName: {
         type: String
     },
-    token: {
-        type: String
-    },
-    tokenSecret: {
+    profileImageUrl:{
         type: String,
-    }
+    } 
 });
 
 const User = mongoose.model("User", userSchema);
