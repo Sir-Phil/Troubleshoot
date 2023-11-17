@@ -2,17 +2,6 @@ const router = require("express").Router();
 const passport = require("passport")
 require('dotenv').config();
 
-// app.get('/', (req, res) => {
-//     res.send('Home Page');
-//   });
-  
-//   app.get('/account', isAuthenticated, (req, res) => {
-//     res.send('Welcome, ' + req.user.displayName);
-//   });
-  
-//   app.get('/login', (req, res) => {
-//     res.send('Login Page <a href="/auth/twitter">Login with Twitter</a>');
-//   });
 
 router.get("login/success",(req, res) => {
     if(req.user){
@@ -38,17 +27,20 @@ router.get("/logout",(req, res) => {
     res.redirect(process.env.CLIENT_HOME_PAGE_UR);
 });
 
-router.get("/twitter", passport.authenticate("twitter"));
+router.get("/twitter", passport.authenticate("twitter", {
+    scope: ['tweet.read', 'users.read', 'offline.access'],
+}));
   
 router.get(
     "/twitter/callback",
-    passport.authenticate("twitter", {
-      successRedirect: process.env.CLIENT_HOME_PAGE_UR,
-      failureRedirect: "/auth/login/failed",
-      failureFlash: true,
-      session: true,
-    })
+    passport.authenticate("twitter"), (req, res) => {
+        const userData = JSON.stringify(req.user, undefined, 2);
+    res.end(
+      `<h1>Authentication succeeded</h1> User data: <pre>${userData}</pre>`
+    );
+  }
   );
+
   
 
   module.exports = router;

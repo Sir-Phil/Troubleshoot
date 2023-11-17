@@ -1,10 +1,9 @@
 const express = require("express");
 const session = require("express-session");
-const cookieSession = require("cookie-session");
 const cors = require("cors");
-const passport = require("./src/config/passport-config")
+const passportStrategy = require("./src/config/passport-config")
+const passport = require("passport");
 const connectDatabase = require("./src/db/dbconfig");
-const cookieParser = require("cookie-parser");  // to parse cookie header
 
 const app = express();
 
@@ -18,13 +17,6 @@ const {
   SESSION_SECRET,
 } = process.env;
 
-app.use(
-  cookieSession({
-    name: "session",
-    keys: [SESSION_SECRET],
-    maxAge: 24 * 60 * 60 * 100
-  })
-);
 
 app.use(
   session({ 
@@ -40,9 +32,7 @@ app.use(passport.initialize());
 
 // deserialize cookie from the browser
 app.use(passport.session());
-
-
-app.use(cookieParser());
+passport.use(passportStrategy);
 
 app.use(
   cors({

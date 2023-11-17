@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@superfaceai/passport-twitter-oauth2": "^1.2.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
@@ -23,7 +24,8 @@
     "nodemon": "^3.0.1",
     "oauth": "^0.10.0",
     "passport": "^0.6.0",
-    "passport-oauth": "^1.0.0",
-    "passport-twitter": "^0.1.5"
+    "passport-oauth2": "^1.7.0",
+    "passport-twitter": "^0.1.5",
+    "passport-twitter-oauth2": "^2.1.1"
   }
 }
