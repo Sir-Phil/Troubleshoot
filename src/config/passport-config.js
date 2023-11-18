@@ -1,9 +1,10 @@
-// const passport = require("passport");
-// const User = require("../models/user");
+const passport = require("passport");
+const User = require("../models/user");
+const { Strategy } = require('@superfaceai/passport-twitter-oauth2');
 // const TwitterStrategy = require('passport-twitter-oauth2');
-// require('dotenv').config();
+require('dotenv').config();
 
-// passport.serializeUser((user, done) => {
+
 //   done(null, user.id);
 // });
 
@@ -62,4 +63,50 @@
 //     }
 //   );
 
-// module.exports = strategy;
+//Passport serialization and deserialization
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+const strategy =
+  new Strategy(
+    {
+      clientID: process.env.TWITTER_CLIENT_ID,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      clientType: 'confidential',
+      callbackURL: `${process.env.BASE_URL}/auth/twitter/callback`,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Check if the user already exists in the database
+        let user = await User.findOne({ twitterId: profile.id });
+
+        if (!user) {
+          // If the user doesn't exist, create a new user in the database
+          user = new User({
+            twitterId: profile.id,
+            displayName: profile.displayName,
+            username: profile.username,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          });
+          await user.save();
+        }
+
+        // Log success and pass the user to the callback
+        console.log('Authentication succeeded!', { accessToken, refreshToken });
+        return done(null, user);
+      } catch (error) {
+        console.error('Error during authentication:', error);
+        return done(error);
+      }
+    }
+  );
+
+module.exports = strategy;
