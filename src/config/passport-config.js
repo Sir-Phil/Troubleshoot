@@ -84,8 +84,9 @@ const strategy =
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log('Twitter Profile:', profile);
         // Check if the user already exists in the database
-        let user = await User.findOne({ twitterId: profile.id });
+        let user = await User.findOneAndUpdate({ twitterId: profile.id });
 
         if (!user) {
           // If the user doesn't exist, create a new user in the database
