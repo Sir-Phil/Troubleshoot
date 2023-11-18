@@ -1,4 +1,4 @@
-### Twitter's OAuth 2.0 server-side auth.
+### Twitter's OAuth 2.0 server-side auth. With Passport.js
 
 #### Twitter's OAuth 2.0 has other advantages compared to OAuth 1.0a:
 
